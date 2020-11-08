@@ -1,0 +1,109 @@
+body {
+    background-color: #000000;
+}
+
+div.error-page {
+    width: 800px;
+    display: block;
+    margin-left: auto;
+    margin-right: auto;
+    color: #eeeeee;
+    font-family: "Lucida Console", Verdana, sans-serif;
+    font-size: x-large;
+    font-style: italic;
+    line-height: 30px;
+}
+
+div.error-page p:last-child {
+    font-style: normal;
+    padding-left: 40px;
+    padding-top: 40px;
+}
+
+#wall-canvas {
+    margin-left: auto;
+    margin-right: auto;
+    width: 2000px;
+    display: block;
+}
+
+.page-button:hover {
+    fill: rgba(255, 255, 255, 0.1);
+    stroke: rgba(255, 255, 255, 0.3);
+}
+
+div.book-container {
+    text-align: center;
+}
+
+.letter { 
+    fill: #666666;
+}
+
+.letter-container {
+    pointer-events: all;
+    fill: rgba(0, 0, 0, 0.0001);
+}
+
+.letter-container:hover {
+    fill: rgba(0, 0, 0, 0.0001);
+}
+
+.letter-container:hover .letter {
+    fill: #6666aa;
+}
+
+.letter-container.active .letter, .letter-container.active:hover .letter {
+    fill: #eeeeee;
+}
+
+.letter-container.active.broken .letter, .letter-container.active.broken:hover .letter {
+    fill: #ee4444;
+}
+
+.board-table td {
+    height: 50px;
+    width: 50px;
+    border: 1px solid #000000;
+    font-size: x-large;
+}
+
+.board-table td.active {
+    background-color: #8888ff;
+}
+
+.board-table td.active.zero {
+    background-color: rgb(255, 177, 88);
+}
+
+.overrides-container {
+    color: #dddddd;
+}
+
+.overrides-container button {
+    margin-right: 10px;
+    width: 80px;
+    height: 40px;
+    color: #dddddd;
+    background-color: #000000;
+    border: 1px solid #dddddd;
+    font-size: x-large;
+}
+
+.overrides-container div {
+    padding: 10px;
+}
+
+.overrides-container div div {
+    padding: 0;
+}
+
+.overrides-flex-container {
+    display: flex;
+    flex-direction: row;
+    width: 300px;
+}
+
+.overrides-flex-container div {
+    flex: 1;
+}
