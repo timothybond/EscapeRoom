@@ -32,7 +32,11 @@ export class Kaleidoscope extends React.Component<KaleidoscopeProps, Kaleidoscop
     rotateClockwise: boolean;
     rotateCounterClockwise: boolean;
 
-    admin: boolean = false;
+    admin: boolean = true;
+
+    xRatio: number = 100;
+    yRatio: number = 30;
+    rRatio: number = 0.075;
 
     constructor(props: KaleidoscopeProps) {
         super(props);
@@ -69,27 +73,27 @@ export class Kaleidoscope extends React.Component<KaleidoscopeProps, Kaleidoscop
     }
 
     XToNumber(x: number) : number {
-        return x / 30 + 1;
+        return x / this.xRatio + 1;
     }
 
     NumberToX(dial: number): number {
-        return (dial - 1) * 30;
+        return (dial - 1) * this.xRatio;
     }
 
     YToNumber(y: number): number {
-        return y / 30 + 1;
+        return y / this.yRatio + 1;
     }
 
     NumberToY(dial: number): number {
-        return (dial - 1) * 30;
+        return (dial - 1) * this.yRatio;
     }
 
     RToNumber(r: number): number {
-        return r * 0.075 + 1;
+        return r * this.rRatio + 1;
     }
 
     NumberToR(dial: number): number {
-        return (dial - 1) / 0.075;
+        return (dial - 1) / this.rRatio;
     }
 
     ReceiveUpdate(gameState: GameState) {
@@ -250,14 +254,24 @@ export class Kaleidoscope extends React.Component<KaleidoscopeProps, Kaleidoscop
 
             // Add 'solution' triangles to original images
             let galaxy = document.getElementById('galaxy') as HTMLImageElement;
+            let skull = document.getElementById('skull') as HTMLImageElement;
+            let meadow = document.getElementById('meadow') as HTMLImageElement;
+            let spiderweb = document.getElementById('spiderweb') as HTMLImageElement;
+            
 
             this.AddSolution(3, 3, 3, bgGlassCanvas, bgGlassCtx, galaxy);
+
+            this.AddSolution(7, 9, 1, bgGlassCanvas, bgGlassCtx, skull);
+
+            this.AddSolution(28, 2, 6, bgGlassCanvas, bgGlassCtx, meadow);
+
+            this.AddSolution(14, 4, 2, bgGlassCanvas, bgGlassCtx, spiderweb);
 
             this.preparedBackgrounds = true;
         }
     }
 
-    AddSolution(xDial: number, yDial: number, rotDial: number, bgGlassCanvas: HTMLCanvasElement, bgGlassCtx: CanvasRenderingContext2D, image: CanvasImageSource) {
+    AddSolution(yDial: number, xDial: number, rotDial: number, bgGlassCanvas: HTMLCanvasElement, bgGlassCtx: CanvasRenderingContext2D, image: CanvasImageSource) {
         for (let i = 0; i < 150; i++) {
             this.DrawSourceTriangle(bgGlassCtx, true);
 
@@ -302,12 +316,15 @@ export class Kaleidoscope extends React.Component<KaleidoscopeProps, Kaleidoscop
             let yVal = this.NumberToY(yDial);
             let rVal = this.NumberToR(rotDial);
 
-            bgCtx.translate(xVal + this.maxOffset, yVal + this.maxOffset);
-            bgCtx.rotate(-1 * rVal);
-            bgCtx.translate(-1 * (xVal + this.maxOffset), -1 * (yVal + this.maxOffset));
+            let rAngle = Math.PI * 2 * rVal / 100
 
-            // This has to be the solution coordinates
-            bgCtx.drawImage(bgGlassCanvas, xVal, yVal);
+            bgCtx.translate(xVal + this.maxOffset, yVal + this.maxOffset);
+            bgCtx.rotate(-1 * rAngle);
+            bgCtx.translate(-1 * this.maxOffset, -1 * this.maxOffset);
+
+            bgCtx.drawImage(bgGlassCanvas, 0, 0);
+
+            bgCtx.resetTransform();
         }
     }
 
@@ -449,15 +466,15 @@ export class Kaleidoscope extends React.Component<KaleidoscopeProps, Kaleidoscop
     Tick() {
         // TODO: Add min/max offsets based on image height/width
         if (this.scrollRight && !this.scrollLeft) {
-            this.setState({ xOffset: Math.min(this.state.xOffset + 1, 1000) });
+            this.setState({ xOffset: Math.min(this.state.xOffset + this.xRatio / 20, 1000) });
         } else if (this.scrollLeft && !this.scrollRight) {
-            this.setState({ xOffset: Math.max(this.state.xOffset - 1, 0) });
+            this.setState({ xOffset: Math.max(this.state.xOffset - this.xRatio / 20, 0) });
         }
 
         if (this.scrollUp && !this.scrollDown) {
-            this.setState({ yOffset: Math.max(this.state.yOffset - 1, 0) });
+            this.setState({ yOffset: Math.max(this.state.yOffset - this.yRatio / 20, 0) });
         } else if (this.scrollDown && !this.scrollUp) {
-            this.setState({ yOffset: Math.min(this.state.yOffset + 1, 1000) });
+            this.setState({ yOffset: Math.min(this.state.yOffset + this.yRatio / 20, 1000) });
         }
 
         if (this.rotateClockwise && !this.rotateCounterClockwise) {
@@ -538,7 +555,10 @@ export class Kaleidoscope extends React.Component<KaleidoscopeProps, Kaleidoscop
             </div>
             <div style={{ display: this.admin ? "inline" : "none" } }>
                 <img id="colored-glass" src="src/fractal.png" onLoad={() => { this.Draw(true); this.Draw(); } } style={{ width: 500, height: 370 }}/>
-                <img id="galaxy" src="src/galaxy.png" onLoad={() => { this.Draw(true); } } style={{ width: 700, height: 700 }}/>
+                <img id="galaxy" src="src/galaxy.png" onLoad={() => { this.Draw(true); }} style={{ width: 700, height: 700 }} />
+                <img id="skull" src="src/skull.png" onLoad={() => { this.Draw(true); }} style={{ width: 700, height: 700 }} />
+                <img id="meadow" src="src/meadow.png" onLoad={() => { this.Draw(true); }} style={{ width: 700, height: 700 }} />
+                <img id="spiderweb" src="src/spiderweb.png" onLoad={() => { this.Draw(true); }} style={{ width: 700, height: 700 }} />
                 <canvas id="glass0" width="2000" height="1481"/>
                 <canvas id="glass1" width="2000" height="1481"/>
                 <canvas id="glass2" width="2000" height="1481"/>
